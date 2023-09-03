@@ -1,8 +1,8 @@
+import * as Comlink from 'comlink';
 import { atom, selector } from "recoil";
+import { TableData } from "../../types/table-data-types";
 import { tableDataKeys } from "./keys";
-import axios from "axios";
-import { Row, TableData } from "../../types/table-data-types";
-import { flatten, longCalculation } from "../../common/commonFunctions";
+import AppWorker from './worker?worker';
 
 const tableDataState = atom<TableData | null>({
     key: tableDataKeys.tableDataAtom,
@@ -14,11 +14,9 @@ export const getTableData = selector<TableData>({
     get: async ({ get }) => {
         const tableData = get(tableDataState);
         if (tableData) return tableData;
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        // longCalculation();
-        const newTableData = (await axios("https://api.tvmaze.com/search/shows?q=snow") as any).data;
-        const flattenTableData = newTableData.map((row: any) => flatten(row));
-        const formatedTableData = flattenTableData.map((row: Row, i: number) => { return { ...row, ...{ id: i } } })
-        return formatedTableData;
+
+        const func: any = Comlink.wrap(new AppWorker());
+        const result = await func();
+        return result;        
     }
 });

@@ -9,7 +9,7 @@ export const flatten: any = (obj: any, roots = [], sep = '/') => Object
     ), {})
 
 
-export const longCalculation = (calculatingMessage: string = 'calculating...', length: number = 2000000000) => {
+export const longCalculation = (calculatingMessage: string = 'calculating...', length: number = 1000000000) => {
     let startTime = performance.now();
     console.log('start long calculation')
     let count = 0;
