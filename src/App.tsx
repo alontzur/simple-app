@@ -3,13 +3,16 @@ import './App.css';
 import './AppVariables.scss';
 import TableContainer from './table/tableContainer';
 import { LinesSkelatonLoader } from './common/commonComponents/skelatonLoaders';
+import { MousePosWrapper } from './common/commonComponents/mousePos/mousePositionWrapper';
 
 function App() {
 
   return (
-    <Suspense fallback={<LinesSkelatonLoader count={60}/>}>
-      <TableContainer />
-    </Suspense>
+    <MousePosWrapper>
+      <Suspense fallback={<LinesSkelatonLoader count={60} />}>
+        <TableContainer />
+      </Suspense>
+    </MousePosWrapper>
   )
 }
 
