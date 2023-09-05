@@ -1,40 +1,29 @@
 import { Table } from 'alon-table';
+import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
+import { CustomInput } from '../common/commonComponents/customInput/customInput';
 import { TextFieldRenderer } from '../fieldRenderers/textFieldRenderer';
 import { getTableData } from '../recoil/table-data/selectors';
-import { useEffect, useRef } from 'react';
-import { CustomInput } from '../common/commonComponents/customInput/customInput';
+import { usefocusOnInputRef } from './customHooks';
 
 function TableContainer() {
 
-    const loadebleData = useRecoilValue(getTableData);
-    const data = loadebleData;
-    const columns = data?.[0] ?
+    const data = useRecoilValue(getTableData);
+    let columns = useMemo(() => data?.[0] &&
         Object.entries(data[0]).map(entry => ({
             header: entry[0],
             cell: (info: any) => <TextFieldRenderer text={info.getValue()}></TextFieldRenderer>,
             accessorKey: entry[0],
-        }))
-        : null
+        })), [data])
 
 
-    const inputRef = useRef<HTMLInputElement>(null);
-    useEffect(() => {
-        window.addEventListener("keydown", (event: KeyboardEvent) => {
-            if (event.ctrlKey && event.key === "k") {
-                event.preventDefault();
-                inputRef.current?.focus();
-            }
-        });
-    }, [])
+    const inputRef = usefocusOnInputRef();
 
     return (
         <>
-        <CustomInput placeholder='press ctrl + k' ref={inputRef}/>
+            <CustomInput placeholder='press ctrl + k' ref={inputRef} />
             {
-                columns ?
-                    <Table columns={columns as unknown as any} data={data} />
-                    : null
+                columns && <Table columns={columns as unknown as any} data={data} />
             }
         </>
     )

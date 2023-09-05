@@ -4,8 +4,10 @@ interface CustomInputProps {
     placeholder?: string
 }
 
-interface CustomInputRef {
-    focus: () => void
+export interface CustomInputRef {
+    focus: () => void,
+    blur: () => void,
+    isFocused: () => boolean,
 }
 
 export const CustomInput = forwardRef<CustomInputRef, CustomInputProps>(({ placeholder }, outsideRef) => {
@@ -16,6 +18,12 @@ export const CustomInput = forwardRef<CustomInputRef, CustomInputProps>(({ place
         return {
             focus() {
                 inputRef.current?.focus();
+            },
+            blur() {
+                inputRef.current?.blur();
+            },
+            isFocused() {
+                return document.activeElement === inputRef.current;
             }
         };
     }, []);

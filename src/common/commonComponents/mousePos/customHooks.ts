@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 
 export const useMousePos = () => {
@@ -6,18 +6,22 @@ export const useMousePos = () => {
     const [isActive, setIsActive] = useState(false);
     const [mousePos, setMousePos] = useState<{ x: number, y: number }>({ x: 0, y: 0 });
 
-    useEffect(() => {
+    const handleMouseMove = useCallback((event: MouseEvent) => {
+        clearTimeout(timeout.current);
+        setMousePos({ x: event.clientX, y: event.clientY });
+        setIsActive(true);
         timeout.current = setTimeout(() => { setIsActive(false); }, 1000);
-    }, [])
+    }, []);
 
     useEffect(() => {
-        window.addEventListener('mousemove', (event) => {
+        timeout.current = setTimeout(() => { setIsActive(false); }, 1000);
+        window.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            window.removeEventListener('mousemove', handleMouseMove);
             clearTimeout(timeout.current);
-            setMousePos({ x: event.clientX, y: event.clientY });
-            setIsActive(true);
-            timeout.current = setTimeout(() => { setIsActive(false); }, 1000);
-        });
-    }, [])
+        };
+    }, [handleMouseMove]);
 
     return [mousePos, isActive];
 }
