@@ -9,7 +9,7 @@ import { usefocusOnInputRef } from './customHooks';
 function TableContainer() {
 
     const data = useRecoilValue(getTableData);
-    let columns = useMemo(() => data?.[0] &&
+    const columns = useMemo(() => data?.[0] &&
         Object.entries(data[0]).map(entry => ({
             header: entry[0],
             cell: (info: any) => <TextFieldRenderer text={info.getValue()}></TextFieldRenderer>,
