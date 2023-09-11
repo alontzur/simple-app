@@ -1,4 +1,5 @@
 import { Table } from 'alon-table';
+// import 'alon-table/style.css';
 import { useMemo } from 'react';
 import { useRecoilValue } from 'recoil';
 import { CustomInput } from '../common/commonComponents/customInput/customInput';
